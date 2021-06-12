@@ -1,4 +1,3 @@
-import React from 'react';
 import { QuotesTableContainer } from '../QuotesTable';
 import './App.scss';
 

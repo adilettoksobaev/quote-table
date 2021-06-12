@@ -1,12 +1,12 @@
+import { Ticker } from './QuotesTableContainer';
 import './QuotesTable.scss';
-import { Quotes } from './QuotesTableContainer';
 
 type Props = {
-    quotes: Quotes[]
+    tickers: Ticker[]
 }
 
 function QuotesTable(props: Props) {
-    const { quotes } = props;
+    const { tickers } = props;
 
     return (
         <div className="container">
@@ -24,16 +24,16 @@ function QuotesTable(props: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {quotes.map(item => (
-                            <tr key={item.id}>
-                                <td>{item.quoteCurrency} / {item.id}</td>
+                        {/* {ticker.map(item => (
+                            <tr key={item.symbol}>
+                                <td>{item.symbol}</td>
                                 <td>38117.32</td>
                                 <td>38117.32</td>
                                 <td>38117.32</td>
                                 <td>38117.32</td>
                                 <td>38117.32</td>
                             </tr>
-                        ))}
+                        ))} */}
                     </tbody>
                 </table>
             </div>

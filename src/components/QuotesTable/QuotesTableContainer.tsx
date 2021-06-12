@@ -12,21 +12,49 @@ export type Quotes = {
     provideLiquidityRate: string;
     feeCurrency: string;
 }
+
+export type Ticker = {
+    ask: string,
+    bid: string,
+    last: string,
+    open: string,
+    low: string,
+    high: string,
+    volume: string,
+    volumeQuote: string,
+    timestamp: string,
+    symbol: string
+}
+
 function QuotesTableContainer() {
-    const [quotes, setQuotes] = useState<Quotes[]>([]);
+    const [tickers, setTickers] = useState<Ticker[]>([]);
+    const [ticker, setTicker] = useState<Ticker | null>(null);
     const socket = useRef<any>(null);
 
     const getQuotes = () => {
         socket.current = new WebSocket('wss://api.exchange.bitcoin.com/api/2/ws');
         socket.current.onopen = () => {
-            const message = {
+            const payload = {
                 method: "getSymbols"
             }
-            socket.current.send(JSON.stringify(message))
-        }
-        socket.current.onmessage = (event: any) => {
-            const _quotes = JSON.parse(event.data);
-            setQuotes(_quotes.result);
+            socket.current.send(JSON.stringify(payload));
+            socket.current.onmessage = (event: any) => {
+                const data = JSON.parse(event.data);
+                for(let quote of data.result) {
+                    const payloadTicker = {
+                        method: "subscribeTicker",
+                        params: {
+                            symbol: quote.id
+                        }
+                    }
+
+                    socket.current.send(JSON.stringify(payloadTicker));
+                    socket.current.onmessage = (eventTicker: any) => {
+                        const dataTicker = JSON.parse(eventTicker.data);
+                        setTicker(dataTicker.params);
+                    }
+                }
+            }
         }
     }
 
@@ -35,12 +63,12 @@ function QuotesTableContainer() {
     }, []);
 
     useEffect(() => {
-        console.log("quotes:", quotes);
-    }, [quotes]);
+        // console.log("ticker", ticker)
+    }, [ticker])
 
     return (
-        <QuotesTable 
-            quotes={quotes} />
+        <QuotesTable  
+            tickers={tickers} />
     );
 }
 

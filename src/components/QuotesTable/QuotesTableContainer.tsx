@@ -31,7 +31,7 @@ function QuotesTableContainer() {
     const [ticker, setTicker] = useState<Ticker | null>(null);
     const socket = useRef<any>(null);
 
-    const getQuotes = () => {
+    const connect = () => {
         socket.current = new WebSocket('wss://api.exchange.bitcoin.com/api/2/ws');
         socket.current.onopen = () => {
             const payload = {
@@ -59,7 +59,7 @@ function QuotesTableContainer() {
     }
 
     useEffect(() => {
-        getQuotes();
+        connect();
     }, []);
 
     useEffect(() => {

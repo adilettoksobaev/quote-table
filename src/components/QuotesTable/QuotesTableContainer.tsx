@@ -16,6 +16,31 @@ export type Quotes = {
     feeCurrency: string;
 }
 
+const GET_SYMBOLS_MESSAGE_ID = "getSymbols";
+const TICKER_NOTIFICATION_ID = "TICKER_NOTIFICATION";
+
+const getSymbolsMessage = () => ({
+    method: "getSymbols",
+    id: GET_SYMBOLS_MESSAGE_ID,
+})
+
+const sendMessage = (socket: WebSocket, payload: any) => {
+    socket.send(JSON.stringify(payload));
+}
+
+const subscribeTickers = (socket: WebSocket, data: any) => {
+    for (let quote of data.result) {
+        const payloadTicker = {
+            method: "subscribeTicker",
+            params: {
+                symbol: quote.id
+            },
+            id: TICKER_NOTIFICATION_ID,
+        }
+        sendMessage(socket, payloadTicker);
+    }
+}
+
 function QuotesTableContainer() {
     const [tickers, setTickers] = useRecoilState(tickersState);
     const [currentTicker, setCurrentTicker] = useRecoilState(currentTickerState);
@@ -48,6 +73,27 @@ function QuotesTableContainer() {
             }
         }
     }
+
+    // const connect = () => {
+    //     socket.current = new WebSocket('wss://api.exchange.bitcoin.com/api/2/ws');
+    //     socket.current.onopen = () => {
+    //         sendMessage(socket.current, getSymbolsMessage());
+    //         socket.current.onmessage = (event: any) => {
+    //             const data = JSON.parse(event.data);
+    //             switch (data.id) {
+    //                 case GET_SYMBOLS_MESSAGE_ID:
+    //                     subscribeTickers(socket.current, data);
+    //                     break;
+    //                 case TICKER_NOTIFICATION_ID:
+    //                     if (data && data.params) {
+    //                         //you should update ticker by symbol instead of setTicker
+    //                         setCurrentTicker(data.params);
+    //                     }
+    //                     break;
+    //             }
+    //         }
+    //     }
+    // }
 
     useEffect(() => {
         connect();

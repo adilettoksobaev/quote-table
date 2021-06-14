@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, atomFamily } from "recoil";
 import { Ticker } from "./type";
 
 export const tickersState = atom<Ticker[]>({

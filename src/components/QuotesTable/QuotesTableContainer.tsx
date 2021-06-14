@@ -5,9 +5,10 @@ import './QuotesTable.scss';
 
 
 function QuotesTableContainer() {
-    const [sortToggle, setSortToggle] = useState(false);
+    const [sortToggle, setSortToggle] = useState(true);
     const [counter, setCounter] = useState(0);
     const socket = useRef<any>(null);
+
     const connect = () => {
         socket.current = new WebSocket('wss://api.exchange.bitcoin.com/api/2/ws');
         socket.current.onopen = () => {
@@ -17,6 +18,7 @@ function QuotesTableContainer() {
             socket.current.send(JSON.stringify(payload));
             socket.current.onmessage = (event: any) => {
                 const data = JSON.parse(event.data);
+
                 for(let quote of data.result) {
                     const payloadTicker = {
                         method: "subscribeTicker",
@@ -24,7 +26,6 @@ function QuotesTableContainer() {
                             symbol: quote.id
                         }
                     }
-
                     socket.current.send(JSON.stringify(payloadTicker));
                     socket.current.onmessage = (eventTicker: any) => {
                         const dataTicker = JSON.parse(eventTicker.data);
@@ -33,16 +34,17 @@ function QuotesTableContainer() {
                         }
                     }
                 }
+
             }
         }
     }
 
     useEffect(() => {
-        let intervalId: any;
-        intervalId = setInterval(() => {
+        let interval: any;
+        interval = setInterval(() => {
             setCounter(counter => counter + 1);
         }, 150);
-        return () => clearInterval(intervalId);
+        return () => clearInterval(interval);
     }, [counter]);
 
     useEffect(() => {
@@ -55,8 +57,9 @@ function QuotesTableContainer() {
 
     return (
         <QuotesTable  
-            tickers={StateTrakers.getTickers()} 
-            handleSortToggle={handleSortToggle} />
+            tickers={StateTrakers.getTickers(sortToggle)} 
+            handleSortToggle={handleSortToggle} 
+            sortToggle={sortToggle} />
     );
 }
 

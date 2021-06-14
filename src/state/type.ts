@@ -9,5 +9,7 @@ export type Ticker = {
     volumeQuote: string;
     timestamp: string;
     symbol: string;
-    active: string;
+    bidActive: string;
+    askActive: string;
+    lastActive: string;
 }

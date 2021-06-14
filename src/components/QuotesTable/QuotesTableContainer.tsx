@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { currentTickerState, tickersState } from '../state';
+import { Ticker } from '../state/type';
 import QuotesTable from './QuotesTable';
 import './QuotesTable.scss';
 
@@ -13,22 +16,10 @@ export type Quotes = {
     feeCurrency: string;
 }
 
-export type Ticker = {
-    ask: string,
-    bid: string,
-    last: string,
-    open: string,
-    low: string,
-    high: string,
-    volume: string,
-    volumeQuote: string,
-    timestamp: string,
-    symbol: string
-}
-
 function QuotesTableContainer() {
-    const [tickers, setTickers] = useState<Ticker[]>([]);
-    const [ticker, setTicker] = useState<Ticker | null>(null);
+    const [tickers, setTickers] = useRecoilState(tickersState);
+    const [currentTicker, setCurrentTicker] = useRecoilState(currentTickerState);
+    const [sortToggle, setSortToggle] = useState(false);
     const socket = useRef<any>(null);
 
     const connect = () => {
@@ -51,7 +42,7 @@ function QuotesTableContainer() {
                     socket.current.send(JSON.stringify(payloadTicker));
                     socket.current.onmessage = (eventTicker: any) => {
                         const dataTicker = JSON.parse(eventTicker.data);
-                        setTicker(dataTicker.params);
+                        setCurrentTicker(dataTicker.params);
                     }
                 }
             }
@@ -63,13 +54,57 @@ function QuotesTableContainer() {
     }, []);
 
     useEffect(() => {
-        // console.log("ticker", ticker)
-    }, [ticker])
+        if(currentTicker) {
+            const index = tickers.findIndex((listItem) => listItem.symbol === currentTicker.symbol);
+            if(index > 0) {
+                setTickers(
+                    getItemsWithUpdateItem(tickers, currentTicker)
+                );
+            } else {
+                setTickers((oldItemList) => [
+                    ...oldItemList,
+                    currentTicker
+                ]);
+            }
+        }
+    }, [currentTicker]);
+
+    const sortByAsc = () => {
+        const newArray = tickers.slice().sort((a, b) => (Number(a.bid) - Number(b.bid)));
+        setTickers(newArray);
+    }
+
+    const sortByDesc = () => {
+        const newArray = tickers.slice().sort((a, b) => (Number(b.bid) - Number(a.bid)));
+        setTickers(newArray);
+    }
+
+    const handleSortToggle = () => {
+        setSortToggle(!sortToggle);
+    }
+
+    useEffect(() => {
+        if(sortToggle) {
+            sortByDesc();
+        } else {
+            sortByAsc();
+        }
+    }, [sortToggle]);
 
     return (
         <QuotesTable  
-            tickers={tickers} />
+            tickers={tickers} 
+            handleSortToggle={handleSortToggle} />
     );
+}
+
+function getItemsWithUpdateItem(items: Ticker[], item: Ticker) {
+    return items.map((_item) => {
+      if (_item.symbol === item.symbol) {
+        return item;
+      }
+      return _item;
+    });
 }
 
 export default QuotesTableContainer;

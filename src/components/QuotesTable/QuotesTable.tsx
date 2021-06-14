@@ -1,12 +1,17 @@
-import { Ticker } from './QuotesTableContainer';
+import { Ticker } from '../state/type';
+import { TickerItemContainer } from '../TickerItem';
 import './QuotesTable.scss';
 
 type Props = {
-    tickers: Ticker[]
+    tickers: Ticker[];
+    handleSortToggle: () => void;
 }
 
 function QuotesTable(props: Props) {
-    const { tickers } = props;
+    const { 
+        tickers,
+        handleSortToggle
+    } = props;
 
     return (
         <div className="container">
@@ -16,7 +21,9 @@ function QuotesTable(props: Props) {
                     <thead>
                         <tr>
                             <th>Ticker</th>
-                            <th>Bid</th>
+                            <th onClick={handleSortToggle}>
+                                Bid
+                            </th>
                             <th>Ask</th>
                             <th>High</th>
                             <th>Low</th>
@@ -24,16 +31,11 @@ function QuotesTable(props: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* {ticker.map(item => (
-                            <tr key={item.symbol}>
-                                <td>{item.symbol}</td>
-                                <td>38117.32</td>
-                                <td>38117.32</td>
-                                <td>38117.32</td>
-                                <td>38117.32</td>
-                                <td>38117.32</td>
-                            </tr>
-                        ))} */}
+                        {tickers.map((item, index) => (
+                            <TickerItemContainer 
+                                key={item.symbol + index}  
+                                ticker={item} />
+                        ))}
                     </tbody>
                 </table>
             </div>

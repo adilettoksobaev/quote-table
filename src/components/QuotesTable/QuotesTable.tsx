@@ -31,7 +31,7 @@ function QuotesTable(props: Props) {
             <div 
                 className="toggle-link"
                 onClick={handleSortToggle}>
-                {sortToggle ? "Show top 50" : "Show all"}
+                {!sortToggle ? "Show top 50" : "Show all"}
             </div>
             <div className="table-container">
                 <table className="table">

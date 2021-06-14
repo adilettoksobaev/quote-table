@@ -128,7 +128,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     )
 }
 
-function descendingComparator<T>(a: any, b: any, orderBy: keyof any) {
+function descendingComparator(a: any, b: any, orderBy: keyof any) {
     const parseIntA: any = {
         symbol: a.symbol,
         bid: parseInt(a.bid),

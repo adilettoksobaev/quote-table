@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Ticker } from '../state/type';
+import { Ticker } from '../../state/type';
 
 type Props = {
     ticker: Ticker

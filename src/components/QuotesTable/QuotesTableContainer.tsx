@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { currentTickerState, tickersState } from '../state';
-import { Ticker } from '../state/type';
+import { currentTickerState, tickersState } from '../../state';
+import { Ticker } from '../../state/type';
 import QuotesTable from './QuotesTable';
 import './QuotesTable.scss';
 

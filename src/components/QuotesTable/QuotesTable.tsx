@@ -1,4 +1,4 @@
-import { Ticker } from '../state/type';
+import { Ticker } from '../../state/type';
 import { TickerItemContainer } from '../TickerItem';
 import './QuotesTable.scss';
 

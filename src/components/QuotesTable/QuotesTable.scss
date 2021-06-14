@@ -15,13 +15,17 @@
     }
     th, td {
         padding: 10px;
-        border-bottom: 1px solid rgba(224, 224, 224, 1);
+        border-bottom: 1px solid #454d55;
+        color: #fff;
     }
     thead {
         position: sticky;
         top: 0;
         z-index: 2;
         background-color: #fff;
+        tr {
+            background-color: #343a40;
+        }
         th {
             text-align: left;
             cursor: pointer;
@@ -29,8 +33,9 @@
     }
     tbody {
         tr {
+            background-color: #343a40;
             &:nth-of-type(odd) {
-                background-color: rgba(0, 0, 0, 0.03);
+                background-color: #3e444a;
             }
         }
     }

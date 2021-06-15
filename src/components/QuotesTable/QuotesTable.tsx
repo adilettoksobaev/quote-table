@@ -129,27 +129,27 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 function descendingComparator(a: any, b: any, orderBy: keyof any) {
-    const parseIntA: any = {
+    const parseFloatA: any = {
         symbol: a.symbol,
-        bid: parseInt(a.bid),
-        ask: parseInt(a.ask),
-        high: parseInt(a.high),
-        low: parseInt(a.low),
-        last: parseInt(a.last),
+        bid: parseFloat(a.bid),
+        ask: parseFloat(a.ask),
+        high: parseFloat(a.high),
+        low: parseFloat(a.low),
+        last: parseFloat(a.last),
     }
-    const parseIntB: any = {
+    const parseFloatB: any = {
         symbol: b.symbol,
-        bid: parseInt(b.bid),
-        ask: parseInt(b.ask),
-        high: parseInt(b.high),
-        low: parseInt(b.low),
-        last: parseInt(b.last),
+        bid: parseFloat(b.bid),
+        ask: parseFloat(b.ask),
+        high: parseFloat(b.high),
+        low: parseFloat(b.low),
+        last: parseFloat(b.last),
     }
 
-    if (parseIntB[orderBy] < parseIntA[orderBy]) {
+    if (parseFloatB[orderBy] < parseFloatA[orderBy]) {
         return -1;
     }
-    if (parseIntB[orderBy] > parseIntA[orderBy]) {
+    if (parseFloatB[orderBy] > parseFloatA[orderBy]) {
         return 1;
     }
     return 0;

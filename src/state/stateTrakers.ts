@@ -31,7 +31,7 @@ export class StateTrakers {
     static getTickers(sortToggle: boolean): Ticker[] {
         const limit = 50;
         const sortArray = Object.values(this.state).sort((a, b) => {
-            return parseInt(b.last) - parseInt(a.last);
+            return parseFloat(b.last) - parseFloat(a.last);
         });
 
         if(sortToggle) {

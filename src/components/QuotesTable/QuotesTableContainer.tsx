@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { StateTrakers } from '../../state/stateTrakers';
+import { Data, Order } from '../../state/type';
 import QuotesTable from './QuotesTable';
 import './QuotesTable.scss';
 
@@ -7,7 +8,16 @@ import './QuotesTable.scss';
 function QuotesTableContainer() {
     const [sortToggle, setSortToggle] = useState(true);
     const [counter, setCounter] = useState(0);
+    const [order, setOrder] = useState<Order>('desc');
+    const [orderBy, setOrderBy] = useState<keyof Data>('last');
+
+    const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
     const socket = useRef<any>(null);
+    
 
     const connect = () => {
         socket.current = new WebSocket('wss://api.exchange.bitcoin.com/api/2/ws');
@@ -59,7 +69,10 @@ function QuotesTableContainer() {
         <QuotesTable  
             tickers={StateTrakers.getTickers(sortToggle)} 
             handleSortToggle={handleSortToggle} 
-            sortToggle={sortToggle} />
+            sortToggle={sortToggle} 
+            order={order} 
+            orderBy={orderBy} 
+            handleRequestSort={handleRequestSort} />
     );
 }
 
